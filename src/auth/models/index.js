@@ -1,9 +1,14 @@
 'use strict';
+
 require('dotenv').config();
+const collection = require('./collection-class')
 const {Sequelize,DataTypes} = require('sequelize');
+const user = require('./usermodel')
+
+
+
+
 const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL ;
-
-
 
 
 
@@ -16,11 +21,14 @@ let sequelizeOptions = process.env.NODE_ENV === 'production' ? {
     }
   }:{};
 
+
   let sequelize = new Sequelize(DATABASE_URL, sequelizeOptions);
 
+  const UserModel = new collection(user(sequelize,DataTypes));
 
 
 
   module.exports = {
     db: sequelize,
-}
+    User : UserModel
+  }
