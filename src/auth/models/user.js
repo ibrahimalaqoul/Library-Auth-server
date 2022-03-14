@@ -11,7 +11,7 @@ const User = Sequelize.define('user',{
         allowNull : false,
         unique : true
     },
-    Email :{
+    Email:{
         type : DataTypes.STRING,
         allowNull: false,
         unique: true
@@ -23,11 +23,11 @@ const User = Sequelize.define('user',{
     token:{
         type : DataTypes.VIRTUAL,
     },
-    role : {
+    role:{
         type : DataTypes.ENUM('admin','libraryman','user'),
         defaultValue : 'user'
     },
-    actions : {
+    actions:{
         type : DataTypes.VIRTUAL,
         get(){
             const acl = {
@@ -45,16 +45,16 @@ const User = Sequelize.define('user',{
                const valid = await bcrypt.compare(password,user.password);
                
                if (valid) {
-                let userToken = JWT.sign({username:user.username},SECRET);
+                let userToken = JWT.sign({username:user.username},SECRET,{expiresIn :90000000});
                   user.token = userToken;
                   return user;
                 
                }else{
-                   throw new Error('invalid password');
+                   throw new Error('invalid login');
                }
                
             } catch (error) {
-               throw new Error('invalid username',error); 
+               throw new Error('invalid login'); 
             }
 
         }
